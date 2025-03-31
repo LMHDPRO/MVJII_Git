@@ -336,16 +336,23 @@ public class GameManager : MonoBehaviour
     /// void (no return)
     /// </summary>
     public void GameOver()
+{
+    StartCoroutine(GameOverRoutine());
+}
+
+private IEnumerator GameOverRoutine()
+{
+    yield return new WaitForSeconds(1f); // Espera 3 segundos antes de ejecutar Game Over
+    gameIsOver = true;
+    if (gameOverEffect != null)
     {
-        gameIsOver = true;
-        if (gameOverEffect != null)
-        {
-            Instantiate(gameOverEffect, transform.position, transform.rotation, null);
-        }
-        if (uiManager != null)
-        {
-            uiManager.allowPause = false;
-            uiManager.GoToPage(gameOverPageIndex);
-        }
+        Instantiate(gameOverEffect, transform.position, transform.rotation, null);
     }
+    if (uiManager != null)
+    {
+        uiManager.allowPause = false;
+        uiManager.GoToPage(gameOverPageIndex);
+    }
+}
+
 }

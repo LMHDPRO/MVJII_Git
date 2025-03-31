@@ -6,19 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Scenes/Tamal.unity
-    guid: e485a8eecfe5a704e9a7a84d660c29e8
-  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 86f51746fae191943b5cf4147a7ad114
   - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
     path: Assets/Scenes/Level1.unity
+    guid: e485a8eecfe5a704e9a7a84d660c29e8
+  - enabled: 1
+    path: Assets/Scenes/Level3.unity
     guid: a346894c2c831be4aaef01950c1518e4
   - enabled: 1
     path: Assets/Scenes/Level2.unity
     guid: d3edc8f71afb41b42ba5487ac33ed034
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 4b6627bdb09239c47ad54869a83913e4, type: 2}
   m_UseUCBPForAssetBundles: 0

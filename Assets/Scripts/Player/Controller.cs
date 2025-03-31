@@ -8,6 +8,19 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class Controller : MonoBehaviour
 {
+    [Header("Dash Settings")]
+[Tooltip("The speed multiplier applied when dashing.")]
+public float dashSpeedMultiplier = 2.5f;
+[Tooltip("The duration of the dash in seconds.")]
+public float dashDuration = 0.2f;
+[Tooltip("Cooldown time before another dash can be used.")]
+public float dashCooldown = 1.0f;
+
+private bool isDashing = false;
+private bool canDash = true;
+private Vector2 dashDirection;
+
+    
     [Header("GameObject/Component References")]
     [Tooltip("The animator controller used to animate the player.")]
     public RuntimeAnimatorController animator = null;
@@ -131,15 +144,56 @@ public class Controller : MonoBehaviour
     /// void (no return)
     /// </summary>
     private void HandleInput()
+{
+    // Find the position that the player should look at
+    Vector2 lookPosition = GetLookPosition();
+    
+    // Get movement input from the inputManager
+    Vector3 movementVector = new Vector3(inputManager.horizontalMoveAxis, inputManager.verticalMoveAxis, 0);
+    
+    // Check for dash input
+    if (inputManager.rightClickPressed && canDash)
     {
-        // Find the position that the player should look at
-        Vector2 lookPosition = GetLookPosition();
-        // Get movement input from the inputManager
-        Vector3 movementVector = new Vector3(inputManager.horizontalMoveAxis, inputManager.verticalMoveAxis, 0);
-        // Move the player
-        MovePlayer(movementVector);
-        LookAtPoint(lookPosition);
+        StartCoroutine(Dash());
     }
+
+    // Move the player (if not dashing)
+    if (!isDashing)
+    {
+        MovePlayer(movementVector);
+    }
+
+    LookAtPoint(lookPosition);
+}
+
+private IEnumerator Dash()
+{
+    isDashing = true;
+    canDash = false;
+    
+    // Store the current movement direction
+    dashDirection = new Vector2(inputManager.horizontalMoveAxis, inputManager.verticalMoveAxis).normalized;
+
+    // If there's no movement input, dash in the current facing direction
+    if (dashDirection == Vector2.zero)
+    {
+        dashDirection = transform.up;
+    }
+
+    float startTime = Time.time;
+    while (Time.time < startTime + dashDuration)
+    {
+        transform.position += (Vector3)dashDirection * moveSpeed * dashSpeedMultiplier * Time.deltaTime;
+        yield return null;
+    }
+
+    isDashing = false;
+
+    // Wait for cooldown
+    yield return new WaitForSeconds(dashCooldown);
+    canDash = true;
+}
+
 
     /// <summary>
     /// Description: 

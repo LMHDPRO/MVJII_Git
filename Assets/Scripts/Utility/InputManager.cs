@@ -8,16 +8,11 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class InputManager : MonoBehaviour
 {
-    // A global reference for the input manager that outher scripts can access to read the input
+    // A global reference for the input manager that other scripts can access to read the input
     public static InputManager instance;
 
     /// <summary>
-    /// Description:
     /// Standard Unity Function called when the script is loaded
-    /// Input:
-    /// none
-    /// Return:
-    /// void (no return)
     /// </summary>
     private void Awake()
     {
@@ -34,13 +29,7 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Description:
-    /// Sets all the input variables to their default values so that nothing weird happens in the game if you accidentally
-    /// set them in the editor
-    /// Input:
-    /// none
-    /// Return:
-    /// void
+    /// Sets all the input variables to their default values
     /// </summary>
     void ResetValuesToDefault()
     {
@@ -54,6 +43,7 @@ public class InputManager : MonoBehaviour
         fireHeld = default;
 
         pausePressed = default;
+        rightClickPressed = default;
     }
 
     [Header("Player Movement Input")]
@@ -68,19 +58,13 @@ public class InputManager : MonoBehaviour
         verticalMoveAxis = inputVector.y;
     }
 
-    [Header("Look Around input")]
+    [Header("Look Around Input")]
     public float horizontalLookAxis;
     public float verticalLookAxis;
 
     /// <summary>
-    /// Description:
-    /// Reads the movement input from the input actions's call back context.
-    /// Input:
-    /// InputAction.CallbackContext context
-    /// Return:
-    /// void
+    /// Reads the mouse position input
     /// </summary>
-    /// <param name="context">The input action callback context meant to be read for movement</param>
     public void ReadMousePositionInput(InputAction.CallbackContext context)
     {
         Vector2 inputVector = context.ReadValue<Vector2>();
@@ -98,14 +82,8 @@ public class InputManager : MonoBehaviour
     public bool fireHeld;
 
     /// <summary>
-    /// Description:
-    /// Reads the fire input from the input action's call back context
-    /// Input:
-    /// InputAction.CallbackContext context
-    /// Returns:
-    /// void
+    /// Reads the fire input
     /// </summary>
-    /// <param name="context">The input action callback context meant to be read for firing</param>
     public void ReadFireInput(InputAction.CallbackContext context)
     {
         firePressed = !context.canceled;
@@ -113,15 +91,6 @@ public class InputManager : MonoBehaviour
         StartCoroutine("ResetFireStart");
     }
 
-    /// <summary>
-    /// Description
-    /// Coroutine that resets the fire pressed variable after one frame
-    /// Inputs:
-    /// none
-    /// Returns: 
-    /// IEnumerator
-    /// </summary>
-    /// <returns>IEnumerator: Allows this to function as a coroutine</returns>
     private IEnumerator ResetFireStart()
     {
         yield return new WaitForEndOfFrame();
@@ -136,18 +105,28 @@ public class InputManager : MonoBehaviour
         StartCoroutine(ResetPausePressed());
     }
 
-    /// <summary>
-    /// Description
-    /// Coroutine that resets the pause pressed variable at the end of the frame
-    /// Inputs:
-    /// none
-    /// Returns: 
-    /// IEnumerator
-    /// </summary>
-    /// <returns>IEnumerator: Allows this to function as a coroutine</returns>
     IEnumerator ResetPausePressed()
     {
         yield return new WaitForEndOfFrame();
         pausePressed = false;
+    }
+
+    [Header("Dash Input (Right Click)")]
+    [Tooltip("Detects if the right mouse button was pressed (Dash Action)")]
+    public bool rightClickPressed;
+
+    /// <summary>
+    /// Reads the right-click input (Dash)
+    /// </summary>
+    public void ReadDashInput(InputAction.CallbackContext context)
+    {
+        rightClickPressed = !context.canceled;
+        StartCoroutine(ResetRightClick());
+    }
+
+    private IEnumerator ResetRightClick()
+    {
+        yield return new WaitForEndOfFrame();
+        rightClickPressed = false;
     }
 }
